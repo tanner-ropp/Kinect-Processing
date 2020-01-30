@@ -6,21 +6,23 @@ import org.openkinect.tests.*;
 Kinect kinect;
 PImage videoImg, depthImg, rawImg;
 int[] rawDepth;
-boolean ir, colorDepth, mirror;
+boolean ir, colorDepth, mirror, trails;
 
 void setup(){
   size(1283, 963);
+  background(30);
   kinect = new Kinect(this);
   rawImg = createImage(kinect.width, kinect.height, RGB);
   ir = false;
   colorDepth = false;
   mirror = false;
+  trails = false;
   kinect.initVideo();
   kinect.initDepth();
 }
 
 void draw(){
-  background(40);
+  //background(40);
   
   kinect.enableIR(ir);
   kinect.enableColorDepth(colorDepth);
@@ -54,12 +56,12 @@ void draw(){
     colorMode(HSB);
     for (int i = 0; i < kinect.width; i++){
       for (int j = 0; j < kinect.height; j++){
-        if (rawDepth[j*kinect.width + i] < 900 && rawDepth[j*kinect.width + i] > 700) {
-          rawImg.pixels[j*kinect.width + i] = color(map(rawDepth[j*kinect.width + i], 800, 900, 255, 100), 255, map(rawDepth[j*kinect.width + i], 800, 900, 255, 0));
+        if (rawDepth[j*kinect.width + i] < 930 && rawDepth[j*kinect.width + i] > 700) {
+          rawImg.pixels[j*kinect.width + i] = color(map(rawDepth[j*kinect.width + i], 700, 900, 255, 100), 255, map(rawDepth[j*kinect.width + i], 850, 930, 255, 0));
           //rawImg.pixels[j*kinect.width + i] = videoImg.pixels[j*kinect.width + i];
-        } else {
-          //rawImg.pixels[j*kinect.width + i] = color(0);
-          rawImg.pixels[j*kinect.width + i] = videoImg.pixels[j*kinect.width + i];
+        } else if (!trails) {
+          rawImg.pixels[j*kinect.width + i] = color(0);
+          // rawImg.pixels[j*kinect.width + i] = videoImg.pixels[j*kinect.width + i];
         }
       }
     }
@@ -102,6 +104,9 @@ void keyPressed(){
   }
   else if (key == 'm') {
     mirror = !mirror;
+  } 
+  else if (key == 't') {
+    trails = !trails;
   } 
   else if (keyCode == UP) {
     float tilt = kinect.getTilt();
