@@ -59,9 +59,16 @@ void draw(){
         if (rawDepth[j*kinect.width + i] < 930 && rawDepth[j*kinect.width + i] > 700) {
           rawImg.pixels[j*kinect.width + i] = color(map(rawDepth[j*kinect.width + i], 700, 900, 255, 100), 255, map(rawDepth[j*kinect.width + i], 850, 930, 255, 0));
           //rawImg.pixels[j*kinect.width + i] = videoImg.pixels[j*kinect.width + i];
-        } else if (!trails) {
+          //rawImg.pixels[j*kinect.width + i] = color(255);
+        } 
+        else if (rawDepth[j*kinect.width + i] <= 700) // closerange effects
+        {
           rawImg.pixels[j*kinect.width + i] = color(0);
-          // rawImg.pixels[j*kinect.width + i] = videoImg.pixels[j*kinect.width + i];
+          rawImg.pixels[j*kinect.width + i] = color(map(rawDepth[j*kinect.width + i], 700, 900, 255, 100), 255, map(rawDepth[j*kinect.width + i], 580, 700, 0, 255));
+        }
+        else if (!trails) {
+          rawImg.pixels[j*kinect.width + i] = color(0);
+          //rawImg.pixels[j*kinect.width + i] = videoImg.pixels[j*kinect.width + i];
         }
       }
     }
